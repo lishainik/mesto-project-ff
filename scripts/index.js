@@ -8,26 +8,32 @@
 
 // @todo: Вывести карточки на страницу
 
+const cardList = document.querySelector(".places__list");
 
-
-function removeCard() {}
+function removeCard(button) {
+  button.addEventListener("click", function () {
+    const card = button.closest(".card");
+    card.remove();
+  });
+}
 
 function createCard(element) {
   const cardTemplate = document.querySelector("#card-template").content;
-  const cardList = document.querySelector(".places__list");
 
   const cardElement = cardTemplate.cloneNode(true);
   const deleteButton = cardElement.querySelector(".card__delete-button");
+  const cardImage = cardElement.querySelector(".card__image");
 
-  cardElement.querySelector(".card__image").src = element.link;
+  cardImage.src = element.link;
+  cardImage.alt = `Изображение места ${element.name}`;
   cardElement.querySelector(".card__title").textContent = element.name;
 
-  deleteButton.addEventListener("click", function () {
-    const card = deleteButton.closest(".card");
-    card.remove();
-  });
+  removeCard(deleteButton);
 
-  cardList.append(cardElement);
+  return cardElement;
 }
 
-initialCards.forEach(createCard);
+initialCards.forEach((element) => {
+  const card = createCard(element);
+  cardList.append(card);
+});
