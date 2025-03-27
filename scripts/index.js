@@ -10,11 +10,9 @@
 
 const cardList = document.querySelector(".places__list");
 
-function removeCard(button) {
-  button.addEventListener("click", function () {
-    const card = button.closest(".card");
+let removeCard = function(evt) {
+    const card = evt.target.closest(".card");
     card.remove();
-  });
 }
 
 function createCard(element) {
@@ -28,7 +26,7 @@ function createCard(element) {
   cardImage.alt = `Изображение места ${element.name}`;
   cardElement.querySelector(".card__title").textContent = element.name;
 
-  removeCard(deleteButton);
+  deleteButton.addEventListener ('click', removeCard)
 
   return cardElement;
 }
