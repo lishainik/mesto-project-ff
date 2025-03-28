@@ -15,7 +15,7 @@ let removeCard = function (evt) {
   card.remove();
 };
 
-function createCard(element) {
+function createCard(element, removeFunc) {
   const cardTemplate = document.querySelector("#card-template").content;
 
   const cardElement = cardTemplate.cloneNode(true);
@@ -26,12 +26,12 @@ function createCard(element) {
   cardImage.alt = `Изображение места ${element.name}`;
   cardElement.querySelector(".card__title").textContent = element.name;
 
-  deleteButton.addEventListener("click", removeCard);
+  deleteButton.addEventListener("click", removeFunc);
 
   return cardElement;
 }
 
 initialCards.forEach((element) => {
-  const card = createCard(element);
+  const card = createCard(element, removeCard);
   cardList.append(card);
 });
