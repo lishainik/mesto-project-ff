@@ -8,6 +8,9 @@
 
 // @todo: Вывести карточки на страницу
 
+import './pages/index.css';
+import {initialCards} from './scripts/cards.js'
+
 const cardList = document.querySelector(".places__list");
 
 let removeCard = function (evt) {
