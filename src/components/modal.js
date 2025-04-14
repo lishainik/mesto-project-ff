@@ -1,21 +1,27 @@
-function openPopup(target) {
-  const popup = target;
+function openPopup(popup) {
   popup.classList.add("popup_is-opened");
-  window.addEventListener("keydown", closePopupOnEsc);
+  document.addEventListener('keydown',closePopupOnEsc )
 }
 
-function closePopup(evt) {
-  const popup = evt.target.closest(".popup");
+function closePopup(popup) {
   popup.classList.remove("popup_is-opened");
+  document.removeEventListener('keydown',closePopupOnEsc )
 }
+
+
+function setImagePopup (popupElement, imageElement, captionElement, image, caption) {
+imageElement.src = image;
+imageElement.alt = caption
+captionElement.textContent = caption;
+openPopup(popupElement)
+}
+
 
 function closePopupOnEsc(evt) {
   if (evt.key === "Escape") {
-    document
-      .querySelector(".popup_is-opened")
-      .classList.remove("popup_is-opened");
-    window.removeEventListener("keydown", closePopupOnEsc);
+    const popup = document.querySelector(".popup_is-opened")
+    closePopup(popup);
   }
 }
 
-export { openPopup, closePopup };
+export { openPopup, closePopup, setImagePopup };

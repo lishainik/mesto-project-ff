@@ -2,7 +2,7 @@
 import "./pages/index.css";
 import { initialCards } from "./components/cards";
 import { removeCard, createCard, likeCard } from "./components/card";
-import { closePopup, openPopup, formSubmit } from "./components/modal";
+import { closePopup, openPopup, setImagePopup } from "./components/modal";
 
 const cardList = document.querySelector(".places__list");
 const profilePopupButton = document.querySelector(".profile__edit-button");
@@ -13,24 +13,24 @@ const cardPopupButton = document.querySelector(".profile__add-button");
 const imagePopup = document.querySelector(".popup_type_image");
 const imagePopupPicture = imagePopup.querySelector(".popup__image");
 const imagePopupCaption = imagePopup.querySelector(".popup__caption");
-const overlay = document.querySelectorAll(".popup");
+const overlays = document.querySelectorAll(".popup");
 const profileName = document.querySelector(".profile__title");
 const profileBio = document.querySelector(".profile__description");
-const nameField = document.querySelector(".popup__input_type_name");
-const bioField = document.querySelector(".popup__input_type_description");
+const profilNameInput = document.querySelector(".popup__input_type_name");
+const profileDescriptionInput = document.querySelector(".popup__input_type_description");
 const profileForm = document.forms["edit-profile"];
-const imageForm = document.forms["new-place"];
-const newCardName = cardPopup.querySelector(".popup__input_type_card-name");
-const newCardImage = cardPopup.querySelector(".popup__input_type_url");
+const newCardForm = document.forms["new-place"];
+const newCardNameInput = cardPopup.querySelector(".popup__input_type_card-name");
+const newCardImageInput = cardPopup.querySelector(".popup__input_type_url");
 
 initialCards.forEach((element) => {
-  const card = createCard(element, removeCard, likeCard);
+  const card = createCard(element, removeCard, likeCard, imagePopup, imagePopupPicture, imagePopupCaption, setImagePopup);
   cardList.append(card);
 });
 
 profilePopupButton.addEventListener("click", function () {
-  nameField.value = profileName.textContent;
-  bioField.value = profileBio.textContent;
+ profilNameInput.value = profileName.textContent;
+  profileDescriptionInput.value = profileBio.textContent;
   openPopup(profilePopup);
 });
 
@@ -39,46 +39,39 @@ cardPopupButton.addEventListener("click", function () {
 });
 
 popupCloseButtons.forEach((element) => {
-  element.addEventListener("click", closePopup);
+  element.addEventListener("click", function(evt) {
+    closePopup(evt.target.closest('.popup'))
+  });
 });
 
-overlay.forEach((element) => {
+overlays.forEach((element) => {
   element.addEventListener("click", function (evt) {
     if (evt.target.classList.contains("popup")) {
-      closePopup(evt);
+      closePopup(evt.target);
     }
   });
 });
 
 profileForm.addEventListener("submit", function (evt) {
   evt.preventDefault();
-  profileName.textContent = nameField.value;
-  profileBio.textContent = bioField.value;
-  closePopup(evt);
+  profileName.textContent = profilNameInput.value;
+  profileBio.textContent = profileDescriptionInput.value;
+  closePopup(evt.target.closest('.popup'));
 });
 
-imageForm.addEventListener("submit", function (evt) {
+newCardForm.addEventListener("submit", function (evt) {
   evt.preventDefault();
   const newCard = [
     {
-      name: imageForm.elements["place-name"].value,
-      link: imageForm.elements["link"].value,
+      name: newCardForm.elements["place-name"].value,
+      link: newCardForm.elements["link"].value,
     },
   ];
   newCard.forEach((element) => {
-    const card = createCard(element, removeCard, likeCard);
+    const card = createCard(element, removeCard, likeCard, imagePopup, imagePopupPicture, imagePopupCaption, setImagePopup);
     cardList.prepend(card);
   });
-  newCardName.value = "";
-  newCardImage.value = "";
-  closePopup(evt);
+  newCardForm.reset()
+  closePopup(evt.target.closest('.popup'));
 });
 
-cardList.addEventListener("click", function (evt) {
-  if (evt.target.classList.contains("card__image")) {
-    imagePopupPicture.src = evt.target.src;
-    imagePopupPicture.alt = evt.target.alt;
-    imagePopupCaption.textContent = evt.target.alt;
-    openPopup(imagePopup);
-  }
-});
