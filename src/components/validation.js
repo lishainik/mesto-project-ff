@@ -4,20 +4,20 @@ function checkForInvalidInputs(inputList) {
   });
 }
 
-function buttonStateToggle(inputList, buttonElement) {
+function buttonStateToggle(inputList, buttonElement, inactiveButtonClass) {
   if (checkForInvalidInputs(inputList)) {
-    buttonElement.classList.add("popup__button_not-valid");
+    buttonElement.classList.add(inactiveButtonClass);
     buttonElement.setAttribute("disabled", "");
   } else {
-    buttonElement.classList.remove("popup__button_not-valid");
+    buttonElement.classList.remove(inactiveButtonClass);
     buttonElement.removeAttribute("disabled", "");
   }
 }
 
-function setValidationEventListeners(formElement) {
-  const inputs = Array.from(formElement.querySelectorAll(".popup__input"));
-  const button = formElement.querySelector(".button");
-  buttonStateToggle(inputs, button);
+function setValidationEventListeners(formElement, inactiveButtonClass, inputElements, buttonElement, errorClass) {
+  const inputs = Array.from(formElement.querySelectorAll(`${inputElements}`));
+  const button = formElement.querySelector(`${buttonElement}`);
+  buttonStateToggle(inputs, button, inactiveButtonClass);
   inputs.forEach((inputElement) => {
     inputElement.addEventListener("input", function () {
       const errorElement = formElement.querySelector(
@@ -25,15 +25,15 @@ function setValidationEventListeners(formElement) {
       );
       if (inputElement.validity.patternMismatch) {
         errorElement.textContent = `Разрешены только латинские и кириллические буквы, знаки дефиса и пробелы`;
-        inputElement.classList.add("popup__input_not-valid");
+        inputElement.classList.add(errorClass);
       } else if (!inputElement.validity.valid) {
         errorElement.textContent = inputElement.validationMessage;
-        inputElement.classList.add("popup__input_not-valid");
+        inputElement.classList.add(errorClass);
       } else {
-        inputElement.classList.remove("popup__input_not-valid");
+        inputElement.classList.remove(errorClass);
         errorElement.textContent = "";
       }
-      buttonStateToggle(inputs, button);
+      buttonStateToggle(inputs, button, inactiveButtonClass);
     });
   });
   formElement.addEventListener("submit", function () {
@@ -41,11 +41,22 @@ function setValidationEventListeners(formElement) {
   });
 }
 
-function enableValidation() {
-  const forms = Array.from(document.querySelectorAll(".popup__form"));
+function cleanErrorMessages (popup, inputSelector, errorSelector, errorClass ) {
+  const errors = popup.querySelectorAll(`${errorSelector}`);
+  const inputs = popup.querySelectorAll(`${inputSelector}`)
+  errors.forEach((element) => {
+    element.textContent = '';
+  });
+  inputs.forEach((element) => {
+    element.classList.remove(errorClass);
+  })
+}
+
+function enableValidation(validationSet) {
+  const forms = Array.from(document.querySelectorAll(`${validationSet.formSelector}`));
   forms.forEach((formElement) => {
-    setValidationEventListeners(formElement);
+    setValidationEventListeners(formElement, validationSet.inactiveButtonClass, validationSet.inputSelector, validationSet.submitButtonSelector, validationSet.errorClass);
   });
 }
 
-export { enableValidation, buttonStateToggle };
+export { enableValidation, buttonStateToggle, cleanErrorMessages };

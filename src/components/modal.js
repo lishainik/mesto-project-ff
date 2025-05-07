@@ -15,15 +15,12 @@ function closePopupOnEsc(evt) {
   }
 }
 
-function cleanErrorMessages (popup) {
-  const errors = popup.querySelectorAll('.popup__error');
-  const inputs = popup.querySelectorAll('.popup__input')
-  errors.forEach((element) => {
-    element.textContent = '';
-  });
-  inputs.forEach((element) => {
-    element.classList.remove('popup__input_not-valid');
-  })
+function loadingRender(isLoading, loadingElement) {
+  if (isLoading) {
+    loadingElement.textContent = "Сохраняется...";
+  } else {
+    loadingElement.textContent = "Cохранить";
+  }
 }
 
-export { openPopup, closePopup, cleanErrorMessages };
+export { openPopup, closePopup, loadingRender };

@@ -13,10 +13,12 @@ function getCards() {
     .then((res) => {
       if (res.ok) {
         return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
       }
     })
-    .catch(() => {
-      return Promise.reject(`Ошибка: ${res.status}`);
+    .catch((err) => {
+     console.log(err)
     });
 }
 
@@ -32,10 +34,12 @@ function sendCard(name, link) {
     .then((res) => {
       if (res.ok) {
         return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
       }
     })
-    .catch(() => {
-      return Promise.reject(`Ошибка: ${res.status}`);
+    .catch((err) => {
+      console.log(err)
     });
 }
 
@@ -46,10 +50,12 @@ function getUserInfo() {
     .then((res) => {
       if (res.ok) {
         return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
       }
     })
-    .catch(() => {
-      return Promise.reject(`Ошибка: ${res.status}`);
+    .catch((err) => {
+      console.log(err)
     });
 }
 
@@ -65,10 +71,12 @@ function updateProfile(name, bio) {
     .then((res) => {
       if (res.ok) {
         return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
       }
     })
-    .catch(() => {
-      return Promise.reject(`Ошибка: ${res.status}`);
+    .catch((err) => {
+      console.log(err)
     });
 }
 
@@ -83,10 +91,12 @@ function updateAvatar(link) {
     .then((res) => {
       if (res.ok) {
         return res.json();
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
       }
     })
-    .catch(() => {
-      return Promise.reject(`Ошибка: ${res.status}`);
+    .catch((err) => {
+      console.log(err);
     });
 }
 
@@ -94,8 +104,16 @@ function deleteCard(id) {
   return fetch(`${config.baseUrl}/cards/${id}`, {
     method: "DELETE",
     headers: config.headers,
-  }).catch((err) => {
-    return Promise.reject(`Ошибка: ${res.status}`);
+  })
+  .then((res) => {
+    if (res.ok) {
+      return res
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+  })
+  .catch((err) => {
+   console.log(err)
   });
 }
 
@@ -103,8 +121,16 @@ function sendLike(id) {
   return fetch(`${config.baseUrl}/cards/likes/${id}`, {
     method: "PUT",
     headers: config.headers,
-  }).catch((err) => {
-    return Promise.reject(`Ошибка: ${res.status}`);
+  })
+  .then((res) => {
+    if (res.ok) {
+      return res
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+  })
+  .catch((err) => {
+   console.log(err)
   });
 }
 
@@ -112,18 +138,19 @@ function deleteLike(id) {
   return fetch(`${config.baseUrl}/cards/likes/${id}`, {
     method: "DELETE",
     headers: config.headers,
-  }).catch((err) => {
-    return Promise.reject(`Ошибка: ${res.status}`);
+  }).then((res) => {
+    if (res.ok) {
+      return res
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+  })
+  .catch((err) => {
+   console.log(err)
   });
 }
 
-function loadingRender(isLoading, loadingElement) {
-  if (isLoading) {
-    loadingElement.textContent = "Сохраняется...";
-  } else {
-    loadingElement.textContent = "Cохранить";
-  }
-}
+
 
 export {
   getCards,
@@ -133,6 +160,5 @@ export {
   deleteCard,
   sendLike,
   deleteLike,
-  loadingRender,
   updateAvatar,
 };

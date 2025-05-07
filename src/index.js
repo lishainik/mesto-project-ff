@@ -1,16 +1,22 @@
 import "./pages/index.css";
 import { removeCard, createCard, likeAndUnlikeCard } from "./components/card";
-import { closePopup, openPopup, cleanErrorMessages } from "./components/modal";
-import { enableValidation } from "./components/validation";
+import { closePopup, openPopup, loadingRender } from "./components/modal";
+import { enableValidation, cleanErrorMessages } from "./components/validation";
 import {
   getCards,
   getUserInfo,
   updateProfile,
   sendCard,
-  loadingRender,
   updateAvatar,
 } from "./components/api";
-
+const validationSet = {
+  formSelector : '.popup__form',
+  inputSelector : '.popup__input',
+  inactiveButtonClass : 'popup__button_not-valid',
+  submitButtonSelector : '.popup__button',
+  errorClass : 'popup__input_not-valid',
+  errorSelector: '.popup__error'
+}
 const cardList = document.querySelector(".places__list");
 const profilePopupButton = document.querySelector(".profile__edit-button");
 const profilePopup = document.querySelector(".popup_type_edit");
@@ -38,6 +44,8 @@ const newCardNameInput = cardPopup.querySelector(
   ".popup__input_type_card-name"
 );
 
+console.log(imagePopup)
+
 function getMyInfo() {
   let myId;
   getUserInfo()
@@ -52,7 +60,10 @@ function getMyInfo() {
       loadCards(myId);
 
       return myId;
-    });
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 function loadCards(id) {
@@ -63,10 +74,6 @@ function loadCards(id) {
         element,
         removeCard,
         likeAndUnlikeCard,
-        imagePopup,
-        imagePopupPicture,
-        imagePopupCaption,
-        setImagePopup,
         id
       );
       cardList.append(card);
@@ -74,18 +81,18 @@ function loadCards(id) {
   });
 }
 
-function setImagePopup(
-  popupElement,
-  imageElement,
-  captionElement,
-  image,
-  caption
-) {
-  imageElement.src = image;
-  imageElement.alt = caption;
-  captionElement.textContent = caption;
-  openPopup(popupElement);
-}
+
+
+cardList.addEventListener("click", function (evt) {
+  if (evt.target.classList.contains('card__image')) {
+    const card = evt.target.closest('.card')
+    const image = card.querySelector('.card__image')
+   
+    imagePopupPicture.src = image.src;
+    imagePopupCaption.textContent = image.alt;
+    openPopup(imagePopup)
+  }
+})
 
 avatarPopupButton.addEventListener("click", function () {
   openPopup(avatarPopup);
@@ -94,7 +101,7 @@ avatarPopupButton.addEventListener("click", function () {
 profilePopupButton.addEventListener("click", function () {
   profileNameInput.value = profileName.textContent;
   profileDescriptionInput.value = profileBio.textContent;
-  cleanErrorMessages(profilePopup);
+  cleanErrorMessages(profilePopup, validationSet.inputSelector, validationSet.errorSelector, validationSet.errorClass);
   openPopup(profilePopup);
 });
 
@@ -158,21 +165,20 @@ newCardForm.addEventListener("submit", function (evt) {
         res,
         removeCard,
         likeAndUnlikeCard,
-        imagePopup,
-        imagePopupPicture,
-        imagePopupCaption,
-        setImagePopup,
         res.owner._id
       );
       cardList.prepend(card);
     })
-    .finally(() => {
+    .then(() => {
       newCardForm.reset();
       closePopup(evt.target.closest(".popup"));
       loadingRender(false, button);
-    });
+    })
+    .catch((err) => {
+      console.log(err);
+    })
 });
 
-enableValidation();
+enableValidation(validationSet);
 
 getMyInfo();
