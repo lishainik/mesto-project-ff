@@ -1,4 +1,5 @@
 .profile__image {
+  position: relative;
   width: 120px;
   height: 120px;
   -webkit-border-radius: 50%;
@@ -7,8 +8,30 @@
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
+  cursor: pointer;
+  z-index: 1;
 }
 
+.profile__image:hover {
+  
+  opacity: 0.6;
+  transition:0.3s;
+}
+
+.profile__image::after {
+  position: relative;
+  content: url('../../../images/avatar-edit-icon.svg');
+  opacity: 0;
+  transition:0.3s;
+  z-index: 10;
+
+}
+
+.profile__image:hover::after {
+  position: relative;
+opacity: 1.0;
+z-index: 10;
+}
 @media screen and (max-width: 740px) {
   .profile__image {
     margin: 0 10px 0 0;
