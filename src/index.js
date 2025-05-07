@@ -1,6 +1,6 @@
 import "./pages/index.css";
 import { removeCard, createCard, likeAndUnlikeCard } from "./components/card";
-import { closePopup, openPopup, loadingRender } from "./components/modal";
+import { closePopup, openPopup } from "./components/modal";
 import { enableValidation, cleanErrorMessages } from "./components/validation";
 import {
   getCards,
@@ -10,13 +10,13 @@ import {
   updateAvatar,
 } from "./components/api";
 const validationSet = {
-  formSelector : '.popup__form',
-  inputSelector : '.popup__input',
-  inactiveButtonClass : 'popup__button_not-valid',
-  submitButtonSelector : '.popup__button',
-  errorClass : 'popup__input_not-valid',
-  errorSelector: '.popup__error'
-}
+  formSelector: ".popup__form",
+  inputSelector: ".popup__input",
+  inactiveButtonClass: "popup__button_not-valid",
+  submitButtonSelector: ".popup__button",
+  errorClass: "popup__input_not-valid",
+  errorSelector: ".popup__error",
+};
 const cardList = document.querySelector(".places__list");
 const profilePopupButton = document.querySelector(".profile__edit-button");
 const profilePopup = document.querySelector(".popup_type_edit");
@@ -44,8 +44,6 @@ const newCardNameInput = cardPopup.querySelector(
   ".popup__input_type_card-name"
 );
 
-console.log(imagePopup)
-
 function getMyInfo() {
   let myId;
   getUserInfo()
@@ -62,37 +60,38 @@ function getMyInfo() {
       return myId;
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
 }
 
 function loadCards(id) {
-  getCards().then((res) => {
-    const initialCards = Array.from(res);
-    initialCards.forEach((element) => {
-      const card = createCard(
-        element,
-        removeCard,
-        likeAndUnlikeCard,
-        id
-      );
-      cardList.append(card);
+  getCards()
+    .then((res) => {
+      const initialCards = Array.from(res);
+      initialCards.forEach((element) => {
+        const card = createCard(
+          element,
+          removeCard,
+          likeAndUnlikeCard,
+          id,
+          openPopup,
+          imagePopup
+        );
+        cardList.append(card);
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  });
 }
 
-
-
-cardList.addEventListener("click", function (evt) {
-  if (evt.target.classList.contains('card__image')) {
-    const card = evt.target.closest('.card')
-    const image = card.querySelector('.card__image')
-   
-    imagePopupPicture.src = image.src;
-    imagePopupCaption.textContent = image.alt;
-    openPopup(imagePopup)
+function loadingRender(isLoading, loadingElement) {
+  if (isLoading) {
+    loadingElement.textContent = "Сохраняется...";
+  } else {
+    loadingElement.textContent = "Cохранить";
   }
-})
+}
 
 avatarPopupButton.addEventListener("click", function () {
   openPopup(avatarPopup);
@@ -101,7 +100,12 @@ avatarPopupButton.addEventListener("click", function () {
 profilePopupButton.addEventListener("click", function () {
   profileNameInput.value = profileName.textContent;
   profileDescriptionInput.value = profileBio.textContent;
-  cleanErrorMessages(profilePopup, validationSet.inputSelector, validationSet.errorSelector, validationSet.errorClass);
+  cleanErrorMessages(
+    profilePopup,
+    validationSet.inputSelector,
+    validationSet.errorSelector,
+    validationSet.errorClass
+  );
   openPopup(profilePopup);
 });
 
@@ -148,6 +152,9 @@ profileForm.addEventListener("submit", function (evt) {
       profileBio.textContent = res.about;
       closePopup(evt.target.closest(".popup"));
     })
+    .catch((err) => {
+      console.log(err);
+    })
     .finally(() => {
       loadingRender(false, button);
     });
@@ -176,7 +183,7 @@ newCardForm.addEventListener("submit", function (evt) {
     })
     .catch((err) => {
       console.log(err);
-    })
+    });
 });
 
 enableValidation(validationSet);

@@ -15,12 +15,4 @@ function closePopupOnEsc(evt) {
   }
 }
 
-function loadingRender(isLoading, loadingElement) {
-  if (isLoading) {
-    loadingElement.textContent = "Сохраняется...";
-  } else {
-    loadingElement.textContent = "Cохранить";
-  }
-}
-
-export { openPopup, closePopup, loadingRender };
+export { openPopup, closePopup };

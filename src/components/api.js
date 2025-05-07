@@ -18,7 +18,7 @@ function getCards() {
       }
     })
     .catch((err) => {
-     console.log(err)
+      console.log(err);
     });
 }
 
@@ -39,24 +39,20 @@ function sendCard(name, link) {
       }
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
     });
 }
 
 function getUserInfo() {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  })
-    .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else {
-        return Promise.reject(`Ошибка: ${res.status}`);
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    });
+  }).then((res) => {
+    if (res.ok) {
+      return res.json();
+    } else {
+      return Promise.reject(`Ошибка: ${res.status}`);
+    }
+  });
 }
 
 function updateProfile(name, bio) {
@@ -76,7 +72,7 @@ function updateProfile(name, bio) {
       }
     })
     .catch((err) => {
-      console.log(err)
+      console.log(err);
     });
 }
 
@@ -105,16 +101,16 @@ function deleteCard(id) {
     method: "DELETE",
     headers: config.headers,
   })
-  .then((res) => {
-    if (res.ok) {
-      return res
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-  })
-  .catch((err) => {
-   console.log(err)
-  });
+    .then((res) => {
+      if (res.ok) {
+        return res;
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 function sendLike(id) {
@@ -122,35 +118,40 @@ function sendLike(id) {
     method: "PUT",
     headers: config.headers,
   })
-  .then((res) => {
-    if (res.ok) {
-      return res
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
-  })
-  .catch((err) => {
-   console.log(err)
-  });
+    .then((res) => {
+      if (res.ok) {
+        return res;
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 function deleteLike(id) {
   return fetch(`${config.baseUrl}/cards/likes/${id}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res
-    } else {
-      return Promise.reject(`Ошибка: ${res.status}`);
-    }
   })
-  .catch((err) => {
-   console.log(err)
-  });
+    .then((res) => {
+      if (res.ok) {
+        return res;
+      } else {
+        return Promise.reject(`Ошибка: ${res.status}`);
+      }
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
-
-
 
 export {
   getCards,

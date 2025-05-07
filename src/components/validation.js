@@ -14,7 +14,13 @@ function buttonStateToggle(inputList, buttonElement, inactiveButtonClass) {
   }
 }
 
-function setValidationEventListeners(formElement, inactiveButtonClass, inputElements, buttonElement, errorClass) {
+function setValidationEventListeners(
+  formElement,
+  inactiveButtonClass,
+  inputElements,
+  buttonElement,
+  errorClass
+) {
   const inputs = Array.from(formElement.querySelectorAll(`${inputElements}`));
   const button = formElement.querySelector(`${buttonElement}`);
   buttonStateToggle(inputs, button, inactiveButtonClass);
@@ -41,21 +47,29 @@ function setValidationEventListeners(formElement, inactiveButtonClass, inputElem
   });
 }
 
-function cleanErrorMessages (popup, inputSelector, errorSelector, errorClass ) {
+function cleanErrorMessages(popup, inputSelector, errorSelector, errorClass) {
   const errors = popup.querySelectorAll(`${errorSelector}`);
-  const inputs = popup.querySelectorAll(`${inputSelector}`)
+  const inputs = popup.querySelectorAll(`${inputSelector}`);
   errors.forEach((element) => {
-    element.textContent = '';
+    element.textContent = "";
   });
   inputs.forEach((element) => {
     element.classList.remove(errorClass);
-  })
+  });
 }
 
 function enableValidation(validationSet) {
-  const forms = Array.from(document.querySelectorAll(`${validationSet.formSelector}`));
+  const forms = Array.from(
+    document.querySelectorAll(`${validationSet.formSelector}`)
+  );
   forms.forEach((formElement) => {
-    setValidationEventListeners(formElement, validationSet.inactiveButtonClass, validationSet.inputSelector, validationSet.submitButtonSelector, validationSet.errorClass);
+    setValidationEventListeners(
+      formElement,
+      validationSet.inactiveButtonClass,
+      validationSet.inputSelector,
+      validationSet.submitButtonSelector,
+      validationSet.errorClass
+    );
   });
 }
 

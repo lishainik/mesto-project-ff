@@ -1,50 +1,39 @@
-import { deleteCard, sendLike, deleteLike} from "./api";
+import { deleteCard, sendLike, deleteLike } from "./api";
 
 const cardTemplate = document.querySelector("#card-template").content;
 
 const removeCard = function (evt, id) {
   deleteCard(id)
-  const card = evt.target.closest(".card");
-  card.remove();
+    .then(() => {
+      const card = evt.target.closest(".card");
+      card.remove();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 const likeAndUnlikeCard = function (evt, id, counter) {
   if (evt.target.classList.contains("card__like-button_is-active")) {
-    deleteLike(id)
-    .then ((res) => {
-      if (res.ok) {
-        return res.json()
-      }
-    })
-    .then((res) => {
+    deleteLike(id).then((res) => {
       evt.target.classList.remove("card__like-button_is-active");
-  counter.textContent =  res.likes.length
-    })
-
+      counter.textContent = res.likes.length;
+    });
   } else {
-    sendLike(id)
-    .then((res) => {
-      if (res.ok) {
-        return res.json()
-      }
-      
-    })
-    .then((res) => {
+    sendLike(id).then((res) => {
       evt.target.classList.add("card__like-button_is-active");
-      counter.textContent = res.likes.length
-    })
+      counter.textContent = res.likes.length;
+    });
   }
-  
 };
-
-
 
 function createCard(
   element,
   removeFunc,
   likeFunc,
   id,
-  popupFunc
+  popupFunc,
+  popupElement
 ) {
   const cardElement = cardTemplate.cloneNode(true);
   const deleteButton = cardElement.querySelector(".card__delete-button");
@@ -74,10 +63,15 @@ function createCard(
       likeFunc(evt, element._id, likeCounter)
     );
   }
-
+  cardImage.addEventListener("click", (evt) => {
+    const image = popupElement.querySelector("img");
+    const caption = popupElement.querySelector("p");
+    image.src = element.link;
+    image.alt = element.name;
+    caption.textContent = element.name;
+    popupFunc(popupElement);
+  });
   return cardElement;
 }
 
 export { removeCard, createCard, likeAndUnlikeCard };
-
-
