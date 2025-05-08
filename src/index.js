@@ -144,6 +144,9 @@ avatarForm.addEventListener("submit", function (evt) {
       profilePicture.style = `background-image: url('${link}')`;
       closePopup(evt.target.closest(".popup"));
     })
+    .catch((err) => {
+      console.log(err)
+    })
     .finally(() => {
       loadingRender(false, button);
     });
