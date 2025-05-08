@@ -18,12 +18,18 @@ const likeAndUnlikeCard = function (evt, id, counter) {
     deleteLike(id).then((res) => {
       evt.target.classList.remove("card__like-button_is-active");
       counter.textContent = res.likes.length;
-    });
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   } else {
     sendLike(id).then((res) => {
       evt.target.classList.add("card__like-button_is-active");
       counter.textContent = res.likes.length;
-    });
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   }
 };
 
@@ -33,7 +39,6 @@ function createCard(
   likeFunc,
   id,
   popupFunc,
-  popupElement
 ) {
   const cardElement = cardTemplate.cloneNode(true);
   const deleteButton = cardElement.querySelector(".card__delete-button");
@@ -63,14 +68,7 @@ function createCard(
       likeFunc(evt, element._id, likeCounter)
     );
   }
-  cardImage.addEventListener("click", (evt) => {
-    const image = popupElement.querySelector("img");
-    const caption = popupElement.querySelector("p");
-    image.src = element.link;
-    image.alt = element.name;
-    caption.textContent = element.name;
-    popupFunc(popupElement);
-  });
+  cardImage.addEventListener("click", (evt) => popupFunc(element.link, element.name));
   return cardElement;
 }
 

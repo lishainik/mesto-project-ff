@@ -74,8 +74,7 @@ function loadCards(id) {
           removeCard,
           likeAndUnlikeCard,
           id,
-          openPopup,
-          imagePopup
+          setImagePopup
         );
         cardList.append(card);
       });
@@ -91,6 +90,14 @@ function loadingRender(isLoading, loadingElement) {
   } else {
     loadingElement.textContent = "Cохранить";
   }
+}
+
+function setImagePopup (picture, caption) {
+  
+  imagePopupPicture.src = picture
+  imagePopupPicture.alt - caption
+  imagePopupCaption.textContent = caption
+  openPopup(imagePopup)
 }
 
 avatarPopupButton.addEventListener("click", function () {
@@ -172,18 +179,22 @@ newCardForm.addEventListener("submit", function (evt) {
         res,
         removeCard,
         likeAndUnlikeCard,
-        res.owner._id
+        res.owner._id,
+        setImagePopup
       );
       cardList.prepend(card);
     })
     .then(() => {
       newCardForm.reset();
       closePopup(evt.target.closest(".popup"));
-      loadingRender(false, button);
+      
     })
     .catch((err) => {
       console.log(err);
-    });
+    })
+    .finally(() => {
+      loadingRender(false, button);
+    })
 });
 
 enableValidation(validationSet);
